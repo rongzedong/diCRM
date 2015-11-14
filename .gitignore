@@ -1,0 +1,39 @@
+# Compiled source  #
+####################
+
+*.class
+*.dll
+*.exe
+*.o
+*.so
+*.com
+
+
+# Packages         # 
+####################
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+
+# Logs and Databases # 
+######################
+*.log
+*.sqlite
+
+o
+# OS generated files # 
+######################
+.DS_Store*
+ethumbs.db
+Icon?
+Thumbs.db
+
+[Dd]ebug*/
+[Rr]elease*/
+[Bb]uild/
