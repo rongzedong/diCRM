@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0 //EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.di.crm.common.mapper.ApprovalMapper">
+<resultMap id="approvalResultMap" type="com.di.approval.domain.Approval">
+	<id column="rowid" jdbcType="VARCHAR" property="rowId"/>
+	<id column="appid" jdbcType="VARCHAR" property="approvalId" />
+	<result column="subject" jdbcType="VARCHAR" property="subject" />	
+	<result column="delflg" jdbcType="BOOLEAN" property="delFlag" />
+ 	<result column="createdby" jdbcType="VARCHAR" property="createdBy"/>
+ 	<result column="createddate" jdbcType="TIMESTAMP" property="createdDate" />
+	<result column="modifiedby" jdbcType="VARCHAR" property="modifiedBy" />
+	<result column="modifieddate" jdbcType="TIMESTAMP" property="modifiedDate"/>
+	<!-- <collection property="lineList" javaType="java.util.ArrayList" resultMap="approvalLineResultMap" /> -->
+</resultMap>
+
+<select id="selectAppWithLines" resultMap="approvalResultMap">
+ SELECT			a.rowid, a.appid, a.subject, a.delflg, a.createdby, a.createddate
+   FROM 		APPROVAL a 
+</select>
+
+<select id="selectWithLinesbyPkId" parameterType="java.lang.String" resultMap="approvalResultMap">
+ SELECT			a.rowid, a.appid, a.subject, a.delflg, a.createdby, a.createddate
+   FROM 		APPROVAL a 
+  WHERE			rowid = #{rowId} 
+    AND			appid = #{approvalId}		
+</select>
+
+<select id="selectWithLinesbyAppId" parameterType="java.lang.String" resultMap="approvalResultMap">
+	SELECT		a.rowid, a.appid, a.subject, a.delflg, a.createdby, a.createddate
+   FROM 		APPROVAL a 
+  WHERE			appid = #{approvalId}
+</select>
+
+<insert id="insertApproval" parameterType="com.di.approval.domain.Approval">
+INSERT INTO APPROVAL (rowid, appid, subject, createdby ) 
+VALUES ( #{rowId, jdbcType=VARCHAR}, #{approvalId, jdbcType=VARCHAR},
+		 #{subject, jdbcType=VARCHAR}, #{createdBy, jdbcType=VARCHAR}
+)
+</insert>
+
+<delete id="deleteApprovalbyPkId" parameterType="com.di.approval.domain.Approval">
+DELETE FROM APPROVAL
+WHERE rowid = #{rowId}
+  and appid = #{approvalId}
+</delete>
+
+<!-- 테스트시 초기화용 : 실제 서비스에서는 삭제요 -->
+<delete id="deleteApprovalAll" parameterType="com.di.approval.domain.Approval">
+DELETE FROM APPROVAL;
+</delete>
+
+<!-- 초기 테스트용 : 컬럼 추가 필요 -->
+<update id="updateApproval" parameterType="com.di.approval.domain.Approval">
+UPDATE APPROVAL 
+SET subject = #{subject}, createdby = #{createdBy} 
+WHERE rowid = #{rowId} 
+  AND appid = #{approvalId}
+</update>
+
+</mapper>

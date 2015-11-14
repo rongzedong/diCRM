@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0 //EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.di.crm.common.mapper.EmployeeMapper">
+	<resultMap id="employeeResultMap" type="com.di.hr.domain.Employee">
+		<id column="rowid" jdbcType="VARCHAR" property="rowId"/>
+		<id column="empid" jdbcType="VARCHAR" property="empId" />
+		<result column="cmpid" jdbcType="VARCHAR" property="companyId" />
+		<result column="depcd" jdbcType="VARCHAR" property="departmentCode" />
+		<result column="poscd" jdbcType="VARCHAR" property="positionCode" />
+		<result column="korname" jdbcType="VARCHAR" property="korName" />
+		<result column="engname" jdbcType="VARCHAR" property="englishName" />
+		<result column="gender" jdbcType="VARCHAR" property="gender" />
+		<result column="address" jdbcType="VARCHAR" property="address" />
+		<result column="phone" jdbcType="VARCHAR" property="phoneNumber" />
+	 	<result column="createdby" jdbcType="VARCHAR" property="createdBy"/>
+	 	<result column="createddate" jdbcType="TIMESTAMP" property="createdDate" />
+		<result column="modifiedby" jdbcType="VARCHAR" property="modifiedBy" />
+		<result column="modifieddate" jdbcType="TIMESTAMP" property="modifiedDate"/>
+	</resultMap>
+
+	<select id="selectEmployeeWithRowId" parameterType="java.lang.String" resultMap="employeeResultMap">
+	 SELECT			a.rowid, a.empid, a.depcd, a.cmpid, a.poscd,
+	 				a.korname, a.engname, a.gender, a.address,
+	 				a.phone, a.createdby, a.createddate
+	   FROM 		EMPLOYEE a 
+	  WHERE			a.rowid = #{rowId} 
+	</select>
+	
+	<select id="selectEmployeeWithEmpId"  parameterType="java.lang.String" resultMap="employeeResultMap">
+	 SELECT			a.rowid, a.empid, a.depcd, a.cmpid, a.poscd,
+	 				a.korname, a.engname, a.gender, a.address,
+	 				a.phone, a.createdby, a.createddate
+	   FROM 		EMPLOYEE a 
+	  WHERE			a.empid = #{empId} 
+	</select>
+		
+	<select id="selectEmployeesAll" resultMap="employeeResultMap">
+	 SELECT			a.rowid, a.empid, a.depcd, a.cmpid, a.poscd,
+	 				a.korname, a.engname, a.gender, a.address,
+	 				a.phone, a.createdby, a.createddate
+	   FROM 		EMPLOYEE a 
+	</select>
+	
+	<insert id="insertEmployee" parameterType="com.di.hr.domain.Employee">
+	INSERT INTO EMPLOYEE (rowid, empid, depcd, cmpid, poscd,
+						  korname, engname, gender, address, 
+						  phone, createdby, createddate ) 
+	VALUES ( #{rowId, jdbcType=VARCHAR}, #{empId, jdbcType=VARCHAR},
+			 #{departmentCode, jdbcType=VARCHAR}, #{positionCode, jdbcType=VARCHAR},
+			 #{korName, jdbcType=VARCHAR}, #{englishName, jdbcType=VARCHAR},
+			 #{gender, jdbcType=VARCHAR}, #{address, jdbcType=VARCHAR},
+			 #{phone, jdbcType=VARCHAR}, #{createdBy, jdbcType=VARCHAR})
+	</insert>
+	
+	<update id="updateEmployeeByPkId" parameterType="com.di.hr.domain.Employee">
+	UPDATE EMPLOYEE 
+	SET depcd = #{departmentCode}, poscd = #{positionCode},
+		korname = #{korName}, engname = #{englishName},
+		gender = #{gender}, address = #{address},
+		phone = #{phone},	createdby = #{createdBy} 
+	WHERE rowid = #{rowId} 
+	  AND empid = #{empId}
+	</update>
+
+	<delete id="deleteEmployeebyPkId" parameterType="com.di.hr.domain.Employee">
+	DELETE FROM EMPLOYEE
+	WHERE rowid = #{rowId}
+	  and empid = #{empId}
+	</delete>
+</mapper>

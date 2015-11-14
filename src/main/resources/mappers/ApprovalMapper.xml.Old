@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0 //EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.di.crm.common.mapper.ApprovalMapper">
+<resultMap id="approvalResultMap" type="com.di.approval.domain.Approval">
+	<id column="rowid" jdbcType="VARCHAR" property="rowId"/>
+	<id column="appid" jdbcType="VARCHAR" property="approvalId" />
+	<result column="subject" jdbcType="VARCHAR" property="subject" />	
+	<result column="content" jdbcType="BLOB" property="content"/>
+	<result column="delflg" jdbcType="BOOLEAN" property="delFlag" />
+ 	<result column="createdby" jdbcType="VARCHAR" property="createdBy"/>
+ 	<result column="createddate" jdbcType="TIMESTAMP" property="createdDate" />
+	<result column="modifiedby" jdbcType="VARCHAR" property="modifiedBy" />
+	<result column="modifieddate" jdbcType="TIMESTAMP" property="modifiedDate"/>
+	<!-- <collection property="lineList" javaType="java.util.ArrayList" resultMap="approvalLineResultMap" /> -->
+</resultMap>
+
+<select id="selectAppWithLines" resultMap="ApprovalResultMap">
+ SELECT			a.rowid, a.appid, a.subject, a.content, a.delflg, a.createdby, a.createddate<!-- ,
+ 				b.rowid, b.seq  , b.linetype, b.empno, b.delflg -->
+   FROM 		APPROVAL a,
+   --LEFT JOIN	APPROVAL_LINE b
+   --ON			a.appid = b.appid 
+</select>
+
+<!-- approval Id로 조회 -->
+<select id="selectWithLinesbyAppId" resultMap="ApprovalResultMap">
+ SELECT			a.rowid, a.appid, a.subject, a.content, a.delflg, a.createdby, a.createddate,
+ 				b.rowid, b.seq  , b.linetype, b.empno, b.delflg
+   FROM 		APPROVAL a,
+   LEFT JOIN	APPROVAL_LINE b
+   ON			a.appid = b.appid 
+ WHERE			a.appid = #{id}
+</select>
+
+<insert id="insertApproval" parameterType="com.di.approval.domain.Approval">
+INSERT INTO APPROVAL (rowid, appid, subject, content, createdby ) 
+VALUES ( #{rowId, jdbcType=VARCHAR}, #{approvalId, jdbcType=VARCHAR},
+		 #{subject, jdbcType=VARCHAR}, #{content, jdbcType=BLOB},
+		 #{createdBy, jdbcType=VARCHAR}
+)
+</insert>
+
+</mapper>

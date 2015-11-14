@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0 //EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.di.crm.common.mapper.ApprovalLineMapper">
+<resultMap id="approvalLineResultMap" type="com.di.approval.domain.ApprovalLine">
+	<id column="rowid" jdbcType="VARCHAR" property="rowId"/>
+	<result column="appid" jdbcType="VARCHAR" property="approvalId" />
+	<result column="seq" jdbcType="INTEGER" property="seq" />
+	<result column="empno" jdbcType="VARCHAR" property="employeeNumber"></result>
+	<result column="delflg" jdbcType="BOOLEAN" property="deleteFlag" />
+	<result column="createdby" jdbcType="VARCHAR" property="createdBy" />
+	<result column="createddate" jdbcType="TIMESTAMP" property="createdDate"/>
+</resultMap>
+
+<select id="selectAppLines" resultMap="approvalLineResultMap">
+ SELECT			a.rowid, a.appid, a.seq, a.linetype, a.delflg
+   FROM 		APPROVAL_LINE a
+</select>
+
+<select id="selectAppLinesbyPkIds" parameterType="com.di.approval.domain.ApprovalLine" resultMap="approvalLineResultMap">
+ SELECT			a.rowid, a.appid, a.seq, a.linetype, a.delflg
+   FROM 		APPROVAL_LINE a
+  WHERE			a.appid = #{approvalId}
+    and			a.rowid = #{rowId}
+</select>
+
+<!-- approval Id로 조회 -->
+<select id="selectAppLinesbyAppId" parameterType="java.lang.String" resultMap="approvalLineResultMap">
+ SELECT			a.rowid, a.appid, a.seq, a.linetype, a.delflg
+   FROM 		APPROVAL_LINE a
+ WHERE			a.appid = #{approvalId}
+</select>
+
+
+
+<insert id="insertApprovalLine" parameterType="com.di.approval.domain.ApprovalLine">
+INSERT INTO APPROVAL_LINE (rowid, appid, seq, linetype, empno, createdby ) 
+VALUES ( #{rowId, jdbcType=VARCHAR}, #{approvalId, jdbcType=VARCHAR},
+		 #{seq, jdbcType=INTEGER}, #{lineType, jdbcType=VARCHAR},
+		 #{employeeNumber, jdbcType=VARCHAR}, #{createdBy, jdbcType=VARCHAR}
+)
+</insert>
+
+<delete id="deleteApprovalLinebyPkId" parameterType="com.di.approval.domain.ApprovalLine">
+DELETE FROM APPROVAL_LINE
+WHERE rowid = #{rowId}
+  and appid = #{approvalId}
+</delete>
+
+<!-- 테스트시 초기화용 : 실제 서비스에서는 삭제요 -->
+<delete id="deleteApprovalLineAll">
+DELETE FROM APPROVAL_LINE;
+</delete>
+
+</mapper>

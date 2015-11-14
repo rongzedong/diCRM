@@ -1,0 +1,78 @@
+DROP TRIGGER IF EXISTS APPROVAL_OnInsert;
+DROP TABLE IF EXISTS APPROVAL;
+DROP TRIGGER IF EXISTS APPROVAL_LINE_OnInsert;
+DROP TABLE IF EXISTS APPROVAL_LINE;
+DROP TABLE IF EXISTS EMPLOYEE;
+
+COMMIT;
+
+CREATE TABLE APPROVAL (
+	rowid 			VARCHAR(16) NOT NULL,
+	appid 			VARCHAR(16) NOT NULL,
+	subject 		VARCHAR(255),
+	content 		BLOB,
+	delflg		    BOOLEAN		NOT NULL DEFAULT 0,
+	createdby 		VARCHAR(16) NOT NULL,
+	modifiedby		VARCHAR(16),
+	createddate 	DATETIME,
+	modifieddate 	DATETIME,
+
+	CONSTRAINT pk_Approval PRIMARY KEY (rowid, appid)
+) ENGINE=INNODB DEFAULT CHARSET = UTF8 COMMENT='APPROVAL_PARENT';
+
+CREATE UNIQUE INDEX par_App_rowid ON APPROVAL (rowid);
+CREATE INDEX par_App_Appid ON APPROVAL (appid);
+
+CREATE
+    TRIGGER APPROVAL_OnInsert BEFORE INSERT
+            ON APPROVAL FOR EACH ROW
+    SET
+        NEW.createddate = NOW()
+;
+
+CREATE TABLE APPROVAL_LINE (
+	rowid 			VARCHAR(16) NOT NULL,
+	appid 			VARCHAR(16) NOT NULL,
+	seq				INT			NOT NULL DEFAULT 0,
+	linetype		VARCHAR(15)	NOT NULL,
+	empno			VARCHAR(16),
+	delflg		    BOOLEAN		NOT NULL DEFAULT 0,
+	createdby 		VARCHAR(16) NOT NULL,
+	createddate 	DATETIME,
+	modifiedby		VARCHAR(16),
+	modifieddate 	DATETIME,
+
+	CONSTRAINT pk_Approvalline PRIMARY KEY (rowid),
+	FOREIGN KEY (appid) REFERENCES APPROVAL (appid)
+) ENGINE=INNODB DEFAULT CHARSET = UTF8 COMMENT='APPROVAL_CHILD_LINES';
+
+CREATE INDEX par_Appline_Rowid ON APPROVAL (rowid);
+
+CREATE
+    TRIGGER APPROVAL_LINE_OnInsert BEFORE INSERT
+            ON APPROVAL_LINE FOR EACH ROW
+    SET
+        NEW.createddate = NOW()
+;
+
+
+CREATE TABLE EMPLOYEE (
+	rowid 			VARCHAR(16) NOT NULL,
+	empid 			VARCHAR(16) NOT NULL,
+	depcd			VARCHAR(15),
+	cmpid			VARCHAR(15),
+	poscd			VARCHAR(15),
+	korname			VARCHAR(200),
+	engname			VARCHAR(200),
+	gender			VARCHAR(15),
+	address			VARCHAR(254),
+	phone			VARCHAR(30),
+	createdby 		VARCHAR(16) NOT NULL,
+	createddate 	DATETIME	NOT NULL,
+	modifiedby		VARCHAR(16),
+	modifieddate 	DATETIME,
+
+	CONSTRAINT pk_Approvalline PRIMARY KEY (rowid, empid)
+)  ENGINE=INNODB DEFAULT CHARSET = UTF8 COMMENT='EMPLOYEE Master';
+
+COMMIT;
